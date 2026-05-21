@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Service Modernization | ROI Analysis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #06080f;
+    --surface: #0d1117;
+    --surface2: #141922;
+    --surface3: #1c2333;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8eaf0;
+    --text-muted: #7a8399;
+    --text-dim: #4a5568;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --accent-dim: rgba(59,130,246,0.12);
+    --green: #10b981;
+    --green-dim: rgba(16,185,129,0.12);
+    --amber: #f59e0b;
+    --amber-dim: rgba(245,158,11,0.12);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.1);
+    --purple: #8b5cf6;
+    --cyan: #06b6d4;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(6,8,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 14px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text);
+  }
+  .nav-brand span { color: var(--accent2); }
+  .nav-links {
+    display: flex; gap: 32px; list-style: none;
+  }
+  .nav-links a {
+    font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted); text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 500;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-badge {
+    font-size: 11px; padding: 4px 10px;
+    background: var(--accent-dim); border: 1px solid rgba(59,130,246,0.25);
+    color: var(--accent2); border-radius: 20px;
+    font-family: 'DM Mono', monospace; letter-spacing: 0.04em;
+  }
+
+  /* LAYOUT */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+  section { padding: 100px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  /* HERO */
+  .hero {
+    padding: 160px 0 100px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 800px 500px at 60% 0%, rgba(59,130,246,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 600px 400px at 0% 80%, rgba(16,185,129,0.04) 0%, transparent 70%);
+  }
+  .hero-grid-lines {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.4;
+    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, transparent 70%);
+  }
+  .hero-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent2); margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-kicker::before {
+    content: ''; display: block; width: 32px; height: 1px;
+    background: var(--accent2);
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  h1 em { font-style: normal; color: var(--accent2); }
+  .hero-subtitle {
+    font-size: 16px; color: var(--text-muted); font-weight: 300;
+    margin-bottom: 48px; max-width: 520px;
+    letter-spacing: 0.02em;
+  }
+  .hero-meta {
+    display: flex; gap: 40px; flex-wrap: wrap;
+    padding-top: 40px; border-top: 1px solid var(--border);
+  }
+  .hero-meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .hero-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .hero-meta-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px; font-weight: 700; color: var(--text);
+  }
+  .hero-meta-value small {
+    font-size: 12px; color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif; font-weight: 400;
+  }
+
+  /* SECTION HEADERS */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent2); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::before {
+    content: ''; display: block; width: 24px; height: 1px;
+    background: var(--accent2);
+  }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(26px, 3.5vw, 40px);
+    font-weight: 700; line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  h2 em { font-style: normal; color: var(--accent2); }
+  .section-desc {
+    font-size: 15px; color: var(--text-muted); max-width: 580px;
+    line-height: 1.7; margin-bottom: 56px;
+  }
+
+  /* BUCKET FRAMEWORK */
+  .bucket-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; margin-bottom: 48px;
+  }
+  .bucket-card {
+    border-radius: var(--radius);
+    padding: 36px;
+    position: relative; overflow: hidden;
+  }
+  .bucket-card.hard {
+    background: linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(6,8,15,0.6) 100%);
+    border: 1px solid rgba(59,130,246,0.2);
+  }
+  .bucket-card.soft {
+    background: linear-gradient(135deg, rgba(16,185,129,0.07) 0%, rgba(6,8,15,0.6) 100%);
+    border: 1px solid rgba(16,185,129,0.18);
+  }
+  .bucket-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .bucket-card.hard .bucket-number { color: var(--accent2); }
+  .bucket-card.soft .bucket-number { color: var(--green); }
+  .bucket-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .bucket-card p { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; }
+  .bucket-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .bucket-tag {
+    font-size: 12px; padding: 5px 11px;
+    border-radius: 20px; font-weight: 500;
+  }
+  .bucket-card.hard .bucket-tag {
+    background: rgba(59,130,246,0.1); color: var(--accent2);
+    border: 1px solid rgba(59,130,246,0.2);
+  }
+  .bucket-card.soft .bucket-tag {
+    background: rgba(16,185,129,0.1); color: var(--green);
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+  .bucket-amount {
+    margin-top: 24px; padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .bucket-amount-label {
+    font-size: 11px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+  .bucket-amount-value {
+    font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800;
+  }
+  .bucket-card.hard .bucket-amount-value { color: var(--accent2); }
+  .bucket-card.soft .bucket-amount-value { color: var(--green); }
+
+  /* KPI CARDS */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 16px; margin-bottom: 60px;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+  .kpi-card:hover { border-color: var(--border2); }
+  .kpi-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 8px;
+  }
+  .kpi-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px; font-weight: 800;
+    color: var(--text); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .kpi-sub { font-size: 12px; color: var(--text-muted); }
+  .kpi-accent-blue .kpi-value { color: var(--accent2); }
+  .kpi-accent-green .kpi-value { color: var(--green); }
+  .kpi-accent-amber .kpi-value { color: var(--amber); }
+  .kpi-accent-purple .kpi-value { color: var(--purple); }
+
+  /* COST COMPARISON TABLE */
+  .cost-table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+  .cost-table-header {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 14px 24px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .cost-table-row {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    transition: background 0.15s;
+  }
+  .cost-table-row:hover { background: var(--surface2); }
+  .cost-table-row:last-child { border-bottom: none; }
+  .cost-table-row.total-row {
+    background: var(--surface3);
+    font-weight: 600;
+  }
+  .row-label { font-size: 14px; font-weight: 500; }
+  .row-current { font-size: 14px; color: var(--amber); font-family: 'DM Mono', monospace; font-weight: 500; }
+  .row-future { font-size: 14px; color: var(--green); font-family: 'DM Mono', monospace; font-weight: 500; }
+  .row-delta {
+    font-size: 13px; font-family: 'DM Mono', monospace;
+    padding: 4px 10px; border-radius: 6px; display: inline-block;
+    background: var(--green-dim); color: var(--green); font-weight: 500;
+  }
+  .row-delta.negative { background: var(--red-dim); color: var(--red); }
+
+  /* TICKET CHART */
+  .ticket-viz {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+    margin-bottom: 40px;
+  }
+  .ticket-viz h4 {
+    font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .ticket-viz p { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
+  .ticket-bar-group { display: flex; flex-direction: column; gap: 14px; }
+  .ticket-bar-row { display: flex; align-items: center; gap: 16px; }
+  .ticket-bar-label {
+    width: 120px; font-size: 12px; text-align: right;
+    color: var(--text-muted); font-family: 'DM Mono', monospace; flex-shrink: 0;
+  }
+  .ticket-bar-track {
+    flex: 1; height: 28px; background: var(--surface2);
+    border-radius: 4px; overflow: hidden; position: relative;
+  }
+  .ticket-bar-fill {
+    height: 100%; border-radius: 4px;
+    display: flex; align-items: center; padding-left: 12px;
+    font-size: 11px; font-family: 'DM Mono', monospace; color: white; font-weight: 500;
+    transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+  }
+  .ticket-bar-count {
+    width: 100px; text-align: right;
+    font-size: 12px; font-family: 'DM Mono', monospace;
+    color: var(--text-muted); flex-shrink: 0;
+  }
+  .bar-p1 { background: linear-gradient(90deg, #ef4444, #f87171); }
+  .bar-p2 { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+  .bar-p3 { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+  .bar-p4 { background: linear-gradient(90deg, #10b981, #34d399); }
+  .bar-planned { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+
+  /* DEFLECTION VIZ */
+  .deflection-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    margin-bottom: 40px;
+  }
+  .deflection-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+  }
+  .deflection-donut-wrap {
+    display: flex; align-items: center; gap: 28px;
+    margin-bottom: 24px;
+  }
+  .donut-chart {
+    width: 100px; height: 100px; flex-shrink: 0;
+  }
+  .donut-stat { font-family: 'Syne', sans-serif; }
+  .donut-stat .big { font-size: 32px; font-weight: 800; color: var(--green); }
+  .donut-stat .label { font-size: 12px; color: var(--text-muted); }
+  .deflection-details { display: flex; flex-direction: column; gap: 10px; }
+  .defl-row {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; padding: 8px 12px;
+    background: var(--surface2); border-radius: var(--radius-sm);
+  }
+  .defl-badge {
+    font-size: 11px; padding: 3px 8px;
+    border-radius: 4px; font-family: 'DM Mono', monospace; font-weight: 500;
+  }
+  .badge-full { background: var(--green-dim); color: var(--green); }
+  .badge-half { background: var(--accent-dim); color: var(--accent2); }
+  .badge-none { background: var(--surface3); color: var(--text-muted); }
+
+  /* ARCHITECTURE DIAGRAM */
+  .arch-diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    margin-bottom: 24px;
+  }
+  .arch-states {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    gap: 32px; align-items: start;
+  }
+  .arch-state-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .arch-state-title.current { color: var(--amber); }
+  .arch-state-title.future { color: var(--green); }
+  .arch-nodes { display: flex; flex-direction: column; gap: 8px; }
+  .arch-node {
+    padding: 10px 14px; border-radius: var(--radius-sm);
+    font-size: 12px; font-weight: 500;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .arch-node-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .arch-node.fragmented {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.15);
+    color: var(--text-muted);
+  }
+  .arch-node.fragmented .arch-node-dot { background: var(--amber); }
+  .arch-node.unified {
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.15);
+    color: var(--text);
+  }
+  .arch-node.unified .arch-node-dot { background: var(--accent2); }
+  .arch-node.ai-layer {
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.18);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .arch-node.ai-layer .arch-node-dot { background: var(--green); }
+  .arch-arrow {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding-top: 48px;
+    color: var(--text-dim);
+  }
+  .arch-arrow-line {
+    width: 1px; height: 40px; background: var(--border2);
+    position: relative;
+  }
+  .arch-arrow svg { width: 24px; height: 24px; opacity: 0.5; }
+  .arch-divider-label {
+    font-size: 10px; font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-dim); margin-top: 8px; white-space: nowrap;
+  }
+
+  /* ROI CHART */
+  .roi-chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+    margin-bottom: 24px;
+  }
+  .roi-chart-card h4 {
+    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .roi-chart-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
+  .roi-bar-chart { display: flex; align-items: flex-end; gap: 12px; height: 200px; }
+  .roi-bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .roi-bar-pair { display: flex; gap: 4px; align-items: flex-end; width: 100%; }
+  .roi-bar {
+    flex: 1; border-radius: 4px 4px 0 0;
+    transition: opacity 0.2s; min-width: 0;
+  }
+  .roi-bar.cost { background: linear-gradient(180deg, rgba(245,158,11,0.6) 0%, rgba(245,158,11,0.3) 100%); }
+  .roi-bar.benefit { background: linear-gradient(180deg, rgba(16,185,129,0.8) 0%, rgba(16,185,129,0.4) 100%); }
+  .roi-bar-label {
+    font-size: 11px; font-family: 'DM Mono', monospace;
+    color: var(--text-dim); text-align: center;
+  }
+  .roi-legend {
+    display: flex; gap: 20px; margin-top: 16px;
+    justify-content: flex-end;
+  }
+  .roi-legend-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--text-muted);
+  }
+  .roi-legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* WATERFALL */
+  .waterfall-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+  }
+  .waterfall-bars { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+  .wf-row { display: flex; align-items: center; gap: 16px; }
+  .wf-label { width: 200px; font-size: 13px; color: var(--text-muted); text-align: right; flex-shrink: 0; }
+  .wf-track { flex: 1; height: 36px; background: var(--surface2); border-radius: 4px; overflow: hidden; position: relative; }
+  .wf-fill {
+    height: 100%; display: flex; align-items: center; padding: 0 12px;
+    font-size: 12px; font-family: 'DM Mono', monospace; font-weight: 500;
+    border-radius: 4px;
+  }
+  .wf-fill.cost-bar { background: linear-gradient(90deg, rgba(245,158,11,0.3), rgba(245,158,11,0.15)); color: var(--amber); }
+  .wf-fill.savings-bar { background: linear-gradient(90deg, rgba(16,185,129,0.35), rgba(16,185,129,0.2)); color: var(--green); }
+  .wf-fill.net-bar { background: linear-gradient(90deg, rgba(59,130,246,0.4), rgba(59,130,246,0.25)); color: var(--accent2); }
+  .wf-amount { width: 120px; font-size: 13px; font-family: 'DM Mono', monospace; flex-shrink: 0; }
+
+  /* ROI SUMMARY */
+  .roi-summary-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    margin-bottom: 40px;
+  }
+  .roi-summary-card {
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center; position: relative;
+  }
+  .roi-summary-card.conservative {
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .roi-summary-card.mid {
+    background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, var(--surface) 100%);
+    border: 1px solid rgba(59,130,246,0.25);
+  }
+  .roi-summary-card.aggressive {
+    background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, var(--surface) 100%);
+    border: 1px solid rgba(16,185,129,0.25);
+  }
+  .roi-card-badge {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-family: 'DM Mono', monospace; font-weight: 500;
+    margin-bottom: 12px; display: block;
+  }
+  .conservative .roi-card-badge { color: var(--text-dim); }
+  .mid .roi-card-badge { color: var(--accent2); }
+  .aggressive .roi-card-badge { color: var(--green); }
+  .roi-card-pct {
+    font-family: 'Syne', sans-serif; font-size: 52px; font-weight: 800;
+    line-height: 1; margin-bottom: 8px;
+  }
+  .conservative .roi-card-pct { color: var(--text-muted); }
+  .mid .roi-card-pct { color: var(--accent2); }
+  .aggressive .roi-card-pct { color: var(--green); }
+  .roi-card-net {
+    font-size: 14px; font-family: 'DM Mono', monospace; margin-bottom: 4px;
+  }
+  .roi-card-label { font-size: 12px; color: var(--text-muted); }
+
+  /* CMDB SECTION */
+  .cmdb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .cmdb-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .cmdb-card-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 4px;
+  }
+  .cmdb-card-sub {
+    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .cmdb-rows { display: flex; flex-direction: column; gap: 8px; }
+  .cmdb-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 12px; border-radius: var(--radius-sm);
+    background: var(--surface2); font-size: 13px;
+  }
+  .cmdb-range {
+    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
+  }
+  .cmdb-range.amber { color: var(--amber); }
+  .cmdb-range.green { color: var(--green); }
+  .cmdb-highlight {
+    margin-top: 16px; padding: 14px;
+    background: var(--green-dim);
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: var(--radius-sm);
+    font-size: 13px; color: var(--green); line-height: 1.6;
+  }
+
+  /* INSIGHTS */
+  .insights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .insight-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    display: flex; gap: 16px; align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+  .insight-card:hover { border-color: var(--border2); }
+  .insight-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .insight-icon.blue { background: var(--accent-dim); }
+  .insight-icon.green { background: var(--green-dim); }
+  .insight-icon.amber { background: var(--amber-dim); }
+  .insight-icon.purple { background: rgba(139,92,246,0.12); }
+  .insight-text h4 {
+    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .insight-text p { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+
+  /* ASSUMPTIONS */
+  .assumptions-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+  }
+  .assumptions-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .assumption-group h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 14px;
+  }
+  .assumption-group ul { list-style: none; }
+  .assumption-group li {
+    font-size: 13px; color: var(--text-muted);
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+    line-height: 1.5;
+  }
+  .assumption-group li:last-child { border-bottom: none; }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .disclaimer p {
+    font-size: 13px; color: var(--text-muted); line-height: 1.75;
+    margin-bottom: 8px;
+  }
+  .disclaimer p:last-child { margin-bottom: 0; }
+
+  /* FOOTER */
+  footer {
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+  }
+  .footer-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-brand {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .footer-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* DIVIDER */
+  .vis-divider {
+    height: 1px; background: var(--border);
+    margin: 40px 0;
+  }
+
+  /* TABS */
+  .tab-set { margin-bottom: 40px; }
+  .tab-buttons {
+    display: flex; gap: 4px; margin-bottom: 24px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 4px; width: fit-content;
+  }
+  .tab-btn {
+    padding: 8px 20px; border-radius: 6px; border: none;
+    background: transparent; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--text-muted); transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: var(--surface3); color: var(--text);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* PAYBACK */
+  .payback-timeline {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+  }
+  .timeline-track { position: relative; margin: 32px 0 16px; }
+  .timeline-bar {
+    height: 8px; background: var(--surface3);
+    border-radius: 4px; overflow: hidden;
+  }
+  .timeline-fill {
+    height: 100%; width: 37%;
+    background: linear-gradient(90deg, var(--green), var(--accent2));
+    border-radius: 4px;
+  }
+  .timeline-markers {
+    display: flex; justify-content: space-between;
+    margin-top: 12px;
+  }
+  .timeline-marker {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--text-dim); text-align: center;
+  }
+  .timeline-payback-indicator {
+    position: absolute; top: -28px; left: 37%;
+    transform: translateX(-50%);
+    font-size: 11px; font-family: 'DM Mono', monospace;
+    background: var(--green); color: white;
+    padding: 3px 8px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .timeline-payback-indicator::after {
+    content: ''; position: absolute;
+    top: 100%; left: 50%; transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--green);
+  }
+  .timeline-phases {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 8px; margin-top: 24px;
+  }
+  .timeline-phase {
+    padding: 14px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .timeline-phase .yr { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim); margin-bottom: 4px; }
+  .timeline-phase .cost { color: var(--amber); font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; }
+  .timeline-phase .savings { color: var(--green); font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; }
+
+  /* UTILITY */
+  .text-green { color: var(--green); }
+  .text-amber { color: var(--amber); }
+  .text-accent { color: var(--accent2); }
+  .text-muted { color: var(--text-muted); }
+  .mono { font-family: 'DM Mono', monospace; }
+  .mt-24 { margin-top: 24px; }
+  .mb-8 { margin-bottom: 8px; }
+  .fw-600 { font-weight: 600; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+  /* ANIMATIONS */
+  .fade-in { opacity: 0; transform: translateY(16px); animation: fadeUp 0.6s ease forwards; }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in:nth-child(1) { animation-delay: 0s; }
+  .fade-in:nth-child(2) { animation-delay: 0.08s; }
+  .fade-in:nth-child(3) { animation-delay: 0.16s; }
+  .fade-in:nth-child(4) { animation-delay: 0.24s; }
+
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .container { padding: 0 20px; }
+    section { padding: 60px 0; }
+    .hero { padding: 100px 0 60px; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .bucket-grid,
+    .deflection-grid,
+    .cmdb-grid,
+    .insights-grid,
+    .arch-states,
+    .roi-summary-grid,
+    .assumptions-grid { grid-template-columns: 1fr; }
+    .cost-table-header,
+    .cost-table-row { grid-template-columns: 2fr 1fr 1fr; }
+    .cost-table-header > *:last-child,
+    .cost-table-row > *:last-child { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Ford Motor <span>/ Employee Service</span></div>
+  <ul class="nav-links">
+    <li><a href="#current">Current State</a></li>
+    <li><a href="#ai">AI Efficiency</a></li>
+    <li><a href="#roi">ROI Model</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#assumptions">Assumptions</a></li>
+  </ul>
+  <div class="nav-badge">Directional Analysis</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="container">
+    <div class="hero-kicker">Employee Service Modernization</div>
+    <h1>ROI Analysis<br><em>ITSM + HR Service</em><br>Transformation</h1>
+    <p class="hero-subtitle">Directional Financial Model for Operating Model Modernization and AI-Enabled Efficiency</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item fade-in">
+        <span class="hero-meta-label">Subject Company</span>
+        <span class="hero-meta-value">Ford Motor <small>Company</small></span>
+      </div>
+      <div class="hero-meta-item fade-in">
+        <span class="hero-meta-label">Global Employees</span>
+        <span class="hero-meta-value">171,000 <small>est.</small></span>
+      </div>
+      <div class="hero-meta-item fade-in">
+        <span class="hero-meta-label">Annual Ticket Volume</span>
+        <span class="hero-meta-value">1.71M <small>tickets/yr est.</small></span>
+      </div>
+      <div class="hero-meta-item fade-in">
+        <span class="hero-meta-label">5-Year Net Benefit</span>
+        <span class="hero-meta-value" style="color:var(--green)">$297-357M <small>est.</small></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FRAMING / BUCKET FRAMEWORK -->
+<section id="framework">
+  <div class="container">
+    <div class="section-label">Analytical Framework</div>
+    <h2>Two Categories of<br><em>Financial Opportunity</em></h2>
+    <p class="section-desc">This analysis is intentionally directional. It is built on publicly available information and industry benchmark assumptions, not Ford's actual contract data, ticket volumes, or operational model. The purpose is to frame a strategic conversation around employee service modernization, platform consolidation, and AI-enabled operating efficiency.</p>
+
+    <div class="bucket-grid">
+      <div class="bucket-card hard">
+        <div class="bucket-number">Bucket 01</div>
+        <h3>Hard Cost Takeout</h3>
+        <p>Platform licensing and operational cost delta between current-state and future-state. These are the most concrete savings opportunities because they are tied directly to auditable, contractable, and structurally predictable platform economics.</p>
+        <div class="bucket-tags">
+          <span class="bucket-tag">Platform Licensing</span>
+          <span class="bucket-tag">Maintenance Costs</span>
+          <span class="bucket-tag">Upgrade Overhead</span>
+          <span class="bucket-tag">Workflow Consolidation</span>
+          <span class="bucket-tag">Operational Simplification</span>
+        </div>
+        <div class="bucket-amount">
+          <div class="bucket-amount-label">Estimated Annual Delta</div>
+          <div class="bucket-amount-value">-$2M to +$18M</div>
+        </div>
+      </div>
+      <div class="bucket-card soft">
+        <div class="bucket-number">Bucket 02</div>
+        <h3>Agentic Productivity Savings</h3>
+        <p>AI-driven ticket deflection, automation, and labor optimization. These savings are real, but inherently softer than licensing reductions because they depend on actual ticket volumes, employee adoption, workflow maturity, and operational execution.</p>
+        <div class="bucket-tags">
+          <span class="bucket-tag">Autonomous Self-Service</span>
+          <span class="bucket-tag">AI-Assisted Resolution</span>
+          <span class="bucket-tag">Reduced Handling Time</span>
+          <span class="bucket-tag">Reduced Escalation Rates</span>
+          <span class="bucket-tag">Improved Support Productivity</span>
+        </div>
+        <div class="bucket-amount">
+          <div class="bucket-amount-label">Estimated Annual AI Savings</div>
+          <div class="bucket-amount-value">$61.7M</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card kpi-accent-amber">
+        <div class="kpi-label">Current Annual Run Cost</div>
+        <div class="kpi-value">$95-114M</div>
+        <div class="kpi-sub">Licensing + Operations + Labor</div>
+      </div>
+      <div class="kpi-card kpi-accent-green">
+        <div class="kpi-label">Projected Future Annual Cost</div>
+        <div class="kpi-value">$26-35M</div>
+        <div class="kpi-sub">Platform + Support (pre-AI savings)</div>
+      </div>
+      <div class="kpi-card kpi-accent-blue">
+        <div class="kpi-label">Total Annual Savings Potential</div>
+        <div class="kpi-value">$61.7M</div>
+        <div class="kpi-sub">Operational + AI efficiency combined</div>
+      </div>
+      <div class="kpi-card kpi-accent-purple">
+        <div class="kpi-label">Estimated Payback Period</div>
+        <div class="kpi-value">18-30mo</div>
+        <div class="kpi-sub">Dependent on adoption and migration</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CURRENT STATE -->
+<section id="current">
+  <div class="container">
+    <div class="section-label">Current State Analysis</div>
+    <h2>Estimated Current Operating<br><em>Cost Structure</em></h2>
+    <p class="section-desc">Ford appears to operate a fragmented employee service environment. The challenge is not a single platform, it is employee service operating model fragmentation across multiple systems, duplicate workflows, and compounding maintenance overhead.</p>
+
+    <div class="ticket-viz">
+      <h4>Annual Ticket Volume by Priority</h4>
+      <p>1,710,000 total estimated annual tickets across IT and HR service categories</p>
+      <div class="ticket-bar-group">
+        <div class="ticket-bar-row">
+          <div class="ticket-bar-label">P1 Critical</div>
+          <div class="ticket-bar-track">
+            <div class="ticket-bar-fill bar-p1" style="width:6%">6%</div>
+          </div>
+          <div class="ticket-bar-count">102,600 / $17.96M</div>
+        </div>
+        <div class="ticket-bar-row">
+          <div class="ticket-bar-label">P2 High</div>
+          <div class="ticket-bar-track">
+            <div class="ticket-bar-fill bar-p2" style="width:7%">7%</div>
+          </div>
+          <div class="ticket-bar-count">119,700 / $9.58M</div>
+        </div>
+        <div class="ticket-bar-row">
+          <div class="ticket-bar-label">P3 Medium</div>
+          <div class="ticket-bar-track">
+            <div class="ticket-bar-fill bar-p3" style="width:22%">22%</div>
+          </div>
+          <div class="ticket-bar-count">376,200 / $13.17M</div>
+        </div>
+        <div class="ticket-bar-row">
+          <div class="ticket-bar-label">P4 Low</div>
+          <div class="ticket-bar-track">
+            <div class="ticket-bar-fill bar-p4" style="width:45%">45%</div>
+          </div>
+          <div class="ticket-bar-count">769,500 / $19.24M</div>
+        </div>
+        <div class="ticket-bar-row">
+          <div class="ticket-bar-label">Planned Work</div>
+          <div class="ticket-bar-track">
+            <div class="ticket-bar-fill bar-planned" style="width:20%">20%</div>
+          </div>
+          <div class="ticket-bar-count">342,000 / $10.26M</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cost-table-wrap">
+      <div class="cost-table-header">
+        <div>Cost Category</div>
+        <div>Current Estimate</div>
+        <div>Future Estimate</div>
+        <div>Delta</div>
+      </div>
+      <div class="cost-table-row">
+        <div class="row-label">ServiceNow Licensing</div>
+        <div class="row-current">$22M-$38.5M</div>
+        <div class="row-future text-accent">$0</div>
+        <div><span class="row-delta">-$22M to -$38.5M</span></div>
+      </div>
+      <div class="cost-table-row">
+        <div class="row-label">Salesforce Platform Licensing</div>
+        <div class="row-current">$0</div>
+        <div class="row-future">$24M-$33M</div>
+        <div><span class="row-delta negative">+$24M to +$33M</span></div>
+      </div>
+      <div class="cost-table-row">
+        <div class="row-label">Platform Maintenance / Upgrades</div>
+        <div class="row-current">$3.3M-$5.8M</div>
+        <div class="row-future">$2M</div>
+        <div><span class="row-delta">-$1.3M to -$3.8M</span></div>
+      </div>
+      <div class="cost-table-row">
+        <div class="row-label">Total Annual Ticket Operating Cost</div>
+        <div class="row-current">$70.2M</div>
+        <div class="row-future">$8.5M</div>
+        <div><span class="row-delta">-$61.7M</span></div>
+      </div>
+      <div class="cost-table-row total-row">
+        <div class="row-label">Total Estimated Annual Run Cost</div>
+        <div class="row-current" style="font-size:15px">$95M-$114M</div>
+        <div class="row-future" style="font-size:15px">$34.5M-$43.5M</div>
+        <div><span class="row-delta" style="font-weight:700">$50M+ annually</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI / DEFLECTION -->
+<section id="ai">
+  <div class="container">
+    <div class="section-label">Agentic Productivity Model</div>
+    <h2>AI-Enabled Self-Service and<br><em>Autonomous Resolution</em></h2>
+    <p class="section-desc">Salesforce AI has the potential to eliminate or automate over 1.2 million employee interactions annually. The productivity model operates at two levels: full autonomous deflection for lower-priority work, and AI augmentation for remaining human-handled interactions.</p>
+
+    <div class="deflection-grid">
+      <div class="deflection-card">
+        <div class="deflection-donut-wrap">
+          <svg class="donut-chart" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="12"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#10b981" stroke-width="12"
+              stroke-dasharray="263.9" stroke-dashoffset="79" stroke-linecap="round"
+              transform="rotate(-90 50 50)" opacity="0.85"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(59,130,246,0.5)" stroke-width="12"
+              stroke-dasharray="79" stroke-dashoffset="0" stroke-linecap="round"
+              transform="rotate(193 50 50)"/>
+          </svg>
+          <div class="donut-stat">
+            <div class="big">76%</div>
+            <div class="label">Tickets eliminated<br>or automated</div>
+          </div>
+        </div>
+        <div class="deflection-details">
+          <div class="defl-row">
+            <span>P4 Low Priority</span>
+            <span class="defl-badge badge-full">Full Deflection</span>
+          </div>
+          <div class="defl-row">
+            <span>Planned Work</span>
+            <span class="defl-badge badge-full">Full Deflection</span>
+          </div>
+          <div class="defl-row">
+            <span>50% of P3 Medium</span>
+            <span class="defl-badge badge-half">Partial Deflection</span>
+          </div>
+          <div class="defl-row">
+            <span>P1/P2 Critical/High</span>
+            <span class="defl-badge badge-none">Human Handled</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="deflection-card">
+        <h4 style="font-family:'Syne',sans-serif;font-size:16px;font-weight:600;margin-bottom:20px">AI Deflection Financial Impact</h4>
+        <div class="deflection-details">
+          <div class="defl-row" style="flex-direction:column;align-items:flex-start;gap:4px">
+            <div style="font-size:12px;color:var(--text-dim);font-family:'DM Mono',monospace;">P4 SAVINGS</div>
+            <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
+              <span>769,500 tickets eliminated</span>
+              <span style="color:var(--green);font-family:'DM Mono',monospace;font-weight:600">$19.24M</span>
+            </div>
+          </div>
+          <div class="defl-row" style="flex-direction:column;align-items:flex-start;gap:4px">
+            <div style="font-size:12px;color:var(--text-dim);font-family:'DM Mono',monospace;">PLANNED WORK SAVINGS</div>
+            <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
+              <span>342,000 tickets eliminated</span>
+              <span style="color:var(--green);font-family:'DM Mono',monospace;font-weight:600">$10.26M</span>
+            </div>
+          </div>
+          <div class="defl-row" style="flex-direction:column;align-items:flex-start;gap:4px">
+            <div style="font-size:12px;color:var(--text-dim);font-family:'DM Mono',monospace;">50% P3 SAVINGS</div>
+            <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
+              <span>188,100 tickets eliminated</span>
+              <span style="color:var(--green);font-family:'DM Mono',monospace;font-weight:600">$6.58M</span>
+            </div>
+          </div>
+          <div class="defl-row" style="flex-direction:column;align-items:flex-start;gap:4px;background:var(--green-dim);border:1px solid rgba(16,185,129,0.2)">
+            <div style="font-size:12px;color:var(--text-dim);font-family:'DM Mono',monospace;">TOTAL DEFLECTION SAVINGS</div>
+            <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
+              <span style="font-weight:600">1,299,600 interactions</span>
+              <span style="color:var(--green);font-family:'DM Mono',monospace;font-weight:700;font-size:15px">$36.1M</span>
+            </div>
+          </div>
+          <div class="defl-row" style="flex-direction:column;align-items:flex-start;gap:4px">
+            <div style="font-size:12px;color:var(--text-dim);font-family:'DM Mono',monospace;">AI AUGMENTATION SAVINGS</div>
+            <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
+              <span>75% effort reduction on 410K remaining</span>
+              <span style="color:var(--accent2);font-family:'DM Mono',monospace;font-weight:600">$25.6M</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding:16px;background:var(--surface2);border-radius:var(--radius-sm);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:600;font-size:14px">Total Estimated Annual AI Savings</span>
+          <span style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green)">$61.7M</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="waterfall-wrap">
+      <h4 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:600;margin-bottom:6px">Labor Savings Waterfall</h4>
+      <p style="font-size:13px;color:var(--text-muted)">Annual labor cost transformation from $70.2M baseline to post-AI $8.5M run rate</p>
+      <div class="waterfall-bars">
+        <div class="wf-row">
+          <div class="wf-label">Current Total Labor Cost</div>
+          <div class="wf-track">
+            <div class="wf-fill cost-bar" style="width:100%">$70.2M annually</div>
+          </div>
+          <div class="wf-amount text-amber mono">$70.2M</div>
+        </div>
+        <div class="wf-row">
+          <div class="wf-label">After P4 Deflection</div>
+          <div class="wf-track">
+            <div class="wf-fill savings-bar" style="width:72.6%">-$19.24M</div>
+          </div>
+          <div class="wf-amount text-green mono">-$19.24M</div>
+        </div>
+        <div class="wf-row">
+          <div class="wf-label">After Planned Work Deflection</div>
+          <div class="wf-track">
+            <div class="wf-fill savings-bar" style="width:57.6%">-$10.26M</div>
+          </div>
+          <div class="wf-amount text-green mono">-$10.26M</div>
+        </div>
+        <div class="wf-row">
+          <div class="wf-label">After 50% P3 Deflection</div>
+          <div class="wf-track">
+            <div class="wf-fill savings-bar" style="width:48.1%">-$6.58M</div>
+          </div>
+          <div class="wf-amount text-green mono">-$6.58M</div>
+        </div>
+        <div class="wf-row">
+          <div class="wf-label">After AI Augmentation (75%)</div>
+          <div class="wf-track">
+            <div class="wf-fill savings-bar" style="width:36.5%">-$25.6M</div>
+          </div>
+          <div class="wf-amount text-green mono">-$25.6M</div>
+        </div>
+        <div class="wf-row">
+          <div class="wf-label" style="color:var(--text);font-weight:600">Remaining Labor Cost</div>
+          <div class="wf-track">
+            <div class="wf-fill net-bar" style="width:12.1%">$8.5M remaining</div>
+          </div>
+          <div class="wf-amount text-accent mono fw-600">$8.5M</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="container">
+    <div class="section-label">Operating Model Transformation</div>
+    <h2>From Fragmentation to<br><em>Unified Employee Service</em></h2>
+    <p class="section-desc">The opportunity is to modernize Ford's employee service operating model, not simply replace an ITSM tool. The largest value is not in software substitution. It is in operational simplification, reduced platform sprawl, and an AI-first employee engagement layer.</p>
+
+    <div class="arch-diagram">
+      <div class="arch-states">
+        <div>
+          <div class="arch-state-title current">Current State: Fragmented</div>
+          <div class="arch-nodes">
+            <div class="arch-node fragmented"><div class="arch-node-dot"></div>ServiceNow ITSM</div>
+            <div class="arch-node fragmented"><div class="arch-node-dot"></div>ServiceNow Employee Center</div>
+            <div class="arch-node fragmented"><div class="arch-node-dot"></div>Oracle HCM Cloud</div>
+            <div class="arch-node fragmented"><div class="arch-node-dot"></div>ServiceNow HR Service Delivery</div>
+            <div class="arch-node fragmented"><div class="arch-node-dot"></div>Jira</div>
+            <div class="arch-node fragmented"><div class="arch-node-dot"></div>SharePoint</div>
+            <div class="arch-node fragmented"><div class="arch-node-dot"></div>Microsoft Teams</div>
+            <div class="arch-node fragmented"><div class="arch-node-dot"></div>Multiple Onboarding / Workflow Tools</div>
+            <div class="arch-node fragmented"><div class="arch-node-dot"></div>CMDB / ITOM / SAM / HAM</div>
+            <div class="arch-node fragmented"><div class="arch-node-dot"></div>ServiceNow Virtual Agent / AI</div>
+          </div>
+        </div>
+
+        <div class="arch-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+          <div class="arch-divider-label">Modernization</div>
+        </div>
+
+        <div>
+          <div class="arch-state-title future">Future State: Unified</div>
+          <div class="arch-nodes">
+            <div class="arch-node ai-layer"><div class="arch-node-dot"></div>Unified AI-First Employee Front Door</div>
+            <div class="arch-node unified"><div class="arch-node-dot"></div>IT Service Desk</div>
+            <div class="arch-node unified"><div class="arch-node-dot"></div>HR Service Desk</div>
+            <div class="arch-node unified"><div class="arch-node-dot"></div>Employee Self-Service Portal</div>
+            <div class="arch-node unified"><div class="arch-node-dot"></div>Workflow Orchestration Layer</div>
+            <div class="arch-node unified"><div class="arch-node-dot"></div>Case Management (IT + HR Converged)</div>
+            <div class="arch-node unified"><div class="arch-node-dot"></div>Teams Integration</div>
+            <div class="arch-node unified"><div class="arch-node-dot"></div>Knowledge Management</div>
+            <div class="arch-node unified"><div class="arch-node-dot"></div>CMDB / Asset Data Layer</div>
+            <div class="arch-node ai-layer"><div class="arch-node-dot"></div>Agentforce AI (Autonomous Resolution)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmdb-grid">
+      <div class="cmdb-card">
+        <div class="cmdb-card-title">Current Model</div>
+        <div class="cmdb-card-sub">ServiceNow CMDB / ITOM</div>
+        <div class="cmdb-rows">
+          <div class="cmdb-row"><span>End-User Devices</span><span class="cmdb-range amber">256K-427K CIs</span></div>
+          <div class="cmdb-row"><span>Software / SaaS</span><span class="cmdb-range amber">342K-684K CIs</span></div>
+          <div class="cmdb-row"><span>Infrastructure</span><span class="cmdb-range amber">171K-342K CIs</span></div>
+          <div class="cmdb-row"><span>Network / Security</span><span class="cmdb-range amber">86K-171K CIs</span></div>
+          <div class="cmdb-row"><span>Logical / Service CIs</span><span class="cmdb-range amber">86K-257K CIs</span></div>
+          <div class="cmdb-row"><span style="font-weight:600">Total CI Range</span><span class="cmdb-range amber" style="font-weight:600">941K-1.88M CIs</span></div>
+        </div>
+        <div style="margin-top:16px;padding:14px;background:var(--amber-dim);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-sm);font-size:13px;color:var(--amber);line-height:1.6">Endpoint devices are separately priced in legacy CMDB models, adding significant incremental licensing cost at Ford's scale.</div>
+      </div>
+      <div class="cmdb-card">
+        <div class="cmdb-card-title">Future Model</div>
+        <div class="cmdb-card-sub">Salesforce CMDB / Data Layer</div>
+        <div class="cmdb-rows">
+          <div class="cmdb-row"><span>End-User Devices</span><span class="cmdb-range green">Included</span></div>
+          <div class="cmdb-row"><span>Software / SaaS</span><span class="cmdb-range green">342K-684K CIs</span></div>
+          <div class="cmdb-row"><span>Infrastructure</span><span class="cmdb-range green">171K-342K CIs</span></div>
+          <div class="cmdb-row"><span>Network / Security</span><span class="cmdb-range green">86K-171K CIs</span></div>
+          <div class="cmdb-row"><span>Logical / Service CIs</span><span class="cmdb-range green">86K-257K CIs</span></div>
+          <div class="cmdb-row"><span style="font-weight:600">Annual License Range</span><span class="cmdb-range green" style="font-weight:600">$16.4M-$25.7M</span></div>
+        </div>
+        <div class="cmdb-highlight">Endpoint devices are included and not separately monetized. This is an important strategic differentiator versus traditional CMDB pricing models.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI MODEL -->
+<section id="roi">
+  <div class="container">
+    <div class="section-label">5-Year ROI Analysis</div>
+    <h2>Financial Model and<br><em>Return on Investment</em></h2>
+    <p class="section-desc">At Ford's scale, small efficiency improvements create enterprise-level financial impact. The 5-year model reflects a phased, coexistence-first modernization approach, not a high-risk rip-and-replace deployment.</p>
+
+    <div class="roi-summary-grid">
+      <div class="roi-summary-card conservative">
+        <span class="roi-card-badge">Conservative</span>
+        <div class="roi-card-pct">190%</div>
+        <div class="roi-card-net mono" style="color:var(--text-muted)">$297M Net Benefit</div>
+        <div class="roi-card-label">5-Year Return on $156M Investment</div>
+      </div>
+      <div class="roi-summary-card mid">
+        <span class="roi-card-badge">Midpoint</span>
+        <div class="roi-card-pct">218%</div>
+        <div class="roi-card-net mono" style="color:var(--accent2)">$340M Net Benefit</div>
+        <div class="roi-card-label">5-Year Return on $156M Investment</div>
+      </div>
+      <div class="roi-summary-card aggressive">
+        <span class="roi-card-badge">Optimistic</span>
+        <div class="roi-card-pct">230%+</div>
+        <div class="roi-card-net mono" style="color:var(--green)">$357M+ Net Benefit</div>
+        <div class="roi-card-label">5-Year Return on $156M Investment</div>
+      </div>
+    </div>
+
+    <div class="roi-chart-card">
+      <h4>5-Year Cumulative Cost vs. Benefit</h4>
+      <p>Investment cost stack vs. cumulative operational savings by year</p>
+      <div style="display:flex;gap:32px;align-items:flex-end">
+        <div style="flex:1">
+          <div style="display:flex;align-items:flex-end;gap:8px;height:220px;padding-bottom:0">
+            <!-- Y1 -->
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="display:flex;gap:3px;align-items:flex-end;width:100%">
+                <div class="roi-bar cost" style="height:90px;flex:1" title="$47M"></div>
+                <div class="roi-bar benefit" style="height:72px;flex:1" title="$62M"></div>
+              </div>
+              <div class="roi-bar-label">Year 1</div>
+            </div>
+            <!-- Y2 -->
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="display:flex;gap:3px;align-items:flex-end;width:100%">
+                <div class="roi-bar cost" style="height:72px;flex:1"></div>
+                <div class="roi-bar benefit" style="height:130px;flex:1"></div>
+              </div>
+              <div class="roi-bar-label">Year 2</div>
+            </div>
+            <!-- Y3 -->
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="display:flex;gap:3px;align-items:flex-end;width:100%">
+                <div class="roi-bar cost" style="height:58px;flex:1"></div>
+                <div class="roi-bar benefit" style="height:160px;flex:1"></div>
+              </div>
+              <div class="roi-bar-label">Year 3</div>
+            </div>
+            <!-- Y4 -->
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="display:flex;gap:3px;align-items:flex-end;width:100%">
+                <div class="roi-bar cost" style="height:54px;flex:1"></div>
+                <div class="roi-bar benefit" style="height:185px;flex:1"></div>
+              </div>
+              <div class="roi-bar-label">Year 4</div>
+            </div>
+            <!-- Y5 -->
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="display:flex;gap:3px;align-items:flex-end;width:100%">
+                <div class="roi-bar cost" style="height:52px;flex:1"></div>
+                <div class="roi-bar benefit" style="height:220px;flex:1"></div>
+              </div>
+              <div class="roi-bar-label">Year 5</div>
+            </div>
+          </div>
+          <div class="roi-legend">
+            <div class="roi-legend-item"><div class="roi-legend-dot" style="background:rgba(245,158,11,0.5)"></div>Annual Cost</div>
+            <div class="roi-legend-item"><div class="roi-legend-dot" style="background:rgba(16,185,129,0.7)"></div>Annual Savings</div>
+          </div>
+        </div>
+        <div style="width:260px;flex-shrink:0">
+          <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:20px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px">5-Year Investment</div>
+            <div class="defl-row" style="background:transparent;padding:4px 0;border-bottom:1px solid var(--border)">
+              <span style="font-size:13px">Salesforce Licensing</span>
+              <span class="mono" style="color:var(--amber)">$145M</span>
+            </div>
+            <div class="defl-row" style="background:transparent;padding:4px 0;border-bottom:1px solid var(--border)">
+              <span style="font-size:13px">Implementation</span>
+              <span class="mono" style="color:var(--amber)">$1M</span>
+            </div>
+            <div class="defl-row" style="background:transparent;padding:4px 0;border-bottom:1px solid var(--border)">
+              <span style="font-size:13px">Admin / Support</span>
+              <span class="mono" style="color:var(--amber)">$10M</span>
+            </div>
+            <div class="defl-row" style="background:var(--amber-dim);border-radius:6px;padding:8px 12px">
+              <span style="font-weight:600">Total Investment</span>
+              <span class="mono fw-600" style="color:var(--amber)">$156M</span>
+            </div>
+            <div style="height:1px;background:var(--border);margin:4px 0"></div>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px">5-Year Benefits</div>
+            <div class="defl-row" style="background:transparent;padding:4px 0;border-bottom:1px solid var(--border)">
+              <span style="font-size:13px">Labor Savings</span>
+              <span class="mono" style="color:var(--green)">$308M</span>
+            </div>
+            <div class="defl-row" style="background:transparent;padding:4px 0;border-bottom:1px solid var(--border)">
+              <span style="font-size:13px">Reduced ServiceNow Spend</span>
+              <span class="mono" style="color:var(--green)">$125-175M</span>
+            </div>
+            <div class="defl-row" style="background:transparent;padding:4px 0;border-bottom:1px solid var(--border)">
+              <span style="font-size:13px">Reduced Maintenance</span>
+              <span class="mono" style="color:var(--green)">$20-30M</span>
+            </div>
+            <div class="defl-row" style="background:var(--green-dim);border-radius:6px;padding:8px 12px">
+              <span style="font-weight:600">Total 5-Year Benefit</span>
+              <span class="mono fw-600" style="color:var(--green)">$453-513M</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="payback-timeline">
+      <h4 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:600;margin-bottom:6px">Payback Timeline</h4>
+      <p style="font-size:13px;color:var(--text-muted)">Estimated 18-30 month payback depending on adoption rate and workflow migration scope</p>
+      <div class="timeline-track">
+        <div style="position:relative">
+          <div class="timeline-payback-indicator">Est. Payback Window</div>
+          <div class="timeline-bar">
+            <div class="timeline-fill"></div>
+          </div>
+        </div>
+        <div class="timeline-markers">
+          <div class="timeline-marker">Month 0<br>Launch</div>
+          <div class="timeline-marker">Month 12<br>Year 1</div>
+          <div class="timeline-marker">Month 18<br>Payback Start</div>
+          <div class="timeline-marker">Month 30<br>Payback End</div>
+          <div class="timeline-marker">Month 36<br>Year 3</div>
+          <div class="timeline-marker">Month 48<br>Year 4</div>
+          <div class="timeline-marker">Month 60<br>Year 5</div>
+        </div>
+      </div>
+      <div class="timeline-phases">
+        <div class="timeline-phase">
+          <div class="yr">Year 1</div>
+          <div style="font-size:12px;margin-bottom:6px;font-weight:500">Foundation</div>
+          <div class="cost">$47M cost</div>
+          <div class="savings">$62M savings</div>
+        </div>
+        <div class="timeline-phase">
+          <div class="yr">Year 2</div>
+          <div style="font-size:12px;margin-bottom:6px;font-weight:500">Scale AI</div>
+          <div class="cost">$33M cost</div>
+          <div class="savings">$99M cumul.</div>
+        </div>
+        <div class="timeline-phase">
+          <div class="yr">Year 3</div>
+          <div style="font-size:12px;margin-bottom:6px;font-weight:500">Optimize</div>
+          <div class="cost">$26M cost</div>
+          <div class="savings">$155M cumul.</div>
+        </div>
+        <div class="timeline-phase">
+          <div class="yr">Year 4</div>
+          <div style="font-size:12px;margin-bottom:6px;font-weight:500">Mature</div>
+          <div class="cost">$26M cost</div>
+          <div class="savings">$217M cumul.</div>
+        </div>
+        <div class="timeline-phase" style="border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.04)">
+          <div class="yr">Year 5</div>
+          <div style="font-size:12px;margin-bottom:6px;font-weight:500;color:var(--green)">Full Value</div>
+          <div class="cost">$24M cost</div>
+          <div class="savings" style="font-size:13px;font-weight:600">$297-357M net</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXECUTIVE INSIGHTS -->
+<section id="insights">
+  <div class="container">
+    <div class="section-label">Executive Takeaways</div>
+    <h2>Strategic Observations at<br><em>Ford's Scale</em></h2>
+    <p class="section-desc">These directional insights are intended to frame the conversation around operating model transformation, not to position a software transaction.</p>
+
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-icon blue">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="insight-text">
+          <h4>Operating Costs Exceed Licensing</h4>
+          <p>Ford may be spending more operating employee service than licensing the platforms themselves. The $70.2M estimated annual ticket operating cost dwarfs the $22M-$38.5M estimated ServiceNow licensing cost.</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon green">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="insight-text">
+          <h4>1.2M+ Interactions Automatable</h4>
+          <p>AI-enabled employee service has the potential to eliminate or automate over 1.2 million employee interactions annually. This is not incremental improvement. It is structural operating model transformation.</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon amber">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="insight-text">
+          <h4>The Opportunity is Operational Simplification</h4>
+          <p>The largest opportunity is operational simplification, not software replacement alone. Platform sprawl, duplicate workflows, and compounding maintenance overhead are the core financial drivers.</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon purple">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        </div>
+        <div class="insight-text">
+          <h4>Scale Amplifies Every Efficiency</h4>
+          <p>At Ford's scale, small efficiency improvements create enterprise-level financial impact. A 10% improvement in P3 resolution time represents millions in annual savings given 376,200 annual P3 tickets.</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon blue">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="insight-text">
+          <h4>Phased, Lower-Risk Modernization</h4>
+          <p>This proposal assumes phased coexistence and modernization, not a high-risk rip-and-replace deployment. Incremental rollout reduces execution risk while enabling early value capture and organizational change management.</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon green">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M9 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/></svg>
+        </div>
+        <div class="insight-text">
+          <h4>HR and IT Convergence Creates Multiplier</h4>
+          <p>Converging HR and IT service delivery into a unified employee engagement layer eliminates a structural redundancy. Separate service desks with separate tooling, workflows, and knowledge bases represent a significant hidden cost.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSUMPTIONS -->
+<section id="assumptions">
+  <div class="container">
+    <div class="section-label">Model Assumptions</div>
+    <h2>Key Assumptions and<br><em>Modeling Parameters</em></h2>
+    <p class="section-desc">All estimates are directional and intended to initiate strategic dialogue. Final savings should be validated collaboratively using Ford's actual operational data, contract terms, and ticket metrics.</p>
+
+    <div class="assumptions-panel">
+      <div class="assumptions-grid">
+        <div class="assumption-group">
+          <h4>Company Profile</h4>
+          <ul>
+            <li>171,000 global employees estimated</li>
+            <li>1,500 estimated IT service desk staff</li>
+            <li>750 estimated HR service desk staff</li>
+            <li>10 tickets per employee per year</li>
+            <li>1,710,000 total annual ticket volume</li>
+          </ul>
+        </div>
+        <div class="assumption-group">
+          <h4>Current Platform Costs</h4>
+          <ul>
+            <li>ServiceNow ITSM: $6M-$8M annually</li>
+            <li>HR Service Delivery: $3.5M-$5M annually</li>
+            <li>ITOM / CMDB: $8M-$14M annually</li>
+            <li>HAM: $1M-$2M / SAM: $1.5M-$3M</li>
+            <li>Maintenance overhead at 15% of licensing</li>
+          </ul>
+        </div>
+        <div class="assumption-group">
+          <h4>Future Platform Costs</h4>
+          <ul>
+            <li>Employee Service Platform: $6.16M</li>
+            <li>IT Service Desk: $990K annually</li>
+            <li>HR Service Desk: $360K annually</li>
+            <li>CMDB / Data Layer: $16.4M-$25.7M</li>
+            <li>Implementation: $1M one-time</li>
+          </ul>
+        </div>
+        <div class="assumption-group">
+          <h4>Cost Per Ticket Assumptions</h4>
+          <ul>
+            <li>P1 Critical: $175 per ticket</li>
+            <li>P2 High: $80 per ticket</li>
+            <li>P3 Medium: $35 per ticket</li>
+            <li>P4 Low: $25 per ticket</li>
+            <li>Planned Work: $30 per ticket</li>
+          </ul>
+        </div>
+        <div class="assumption-group">
+          <h4>AI Automation Assumptions</h4>
+          <ul>
+            <li>Full deflection of all P4 tickets</li>
+            <li>Full deflection of all planned work</li>
+            <li>50% deflection of P3 medium tickets</li>
+            <li>75% effort reduction on remaining tickets</li>
+            <li>1,299,600 total interactions eliminated</li>
+          </ul>
+        </div>
+        <div class="assumption-group">
+          <h4>Model Limitations</h4>
+          <ul>
+            <li>Based on public information only</li>
+            <li>Not Ford's actual contract terms</li>
+            <li>Actual ticket volumes may differ materially</li>
+            <li>Adoption rates affect AI savings realization</li>
+            <li>Productivity savings require validation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DISCLAIMER -->
+<section id="disclaimer" style="padding-bottom:60px">
+  <div class="container">
+    <div class="section-label">Important Disclosures</div>
+    <h2>Analytical <em>Limitations</em></h2>
+    <div class="disclaimer">
+      <p>This analysis is directional and assumption-based and intended solely to initiate strategic discussion around employee service modernization. It is not a binding commercial proposal, a final business case, or an endorsement of any specific commercial arrangement.</p>
+      <p>Actual platform usage, licensing, operational processes, workflow complexity, and support models may differ materially from the estimates presented here. Ford's actual ServiceNow contract terms, ticket volumes, cost-per-ticket metrics, and HR service delivery model were not available to the authors of this analysis.</p>
+      <p>We welcome validation, correction, and refinement of these assumptions through collaborative discovery. The productivity savings in Bucket 02 are particularly dependent on Ford's actual operational data and should not be relied upon without internal validation.</p>
+      <p>This proposal assumes phased coexistence and modernization, not a high-risk rip-and-replace deployment. Timeline, sequencing, and migration complexity will materially affect both cost and benefit realization.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">Employee Service Modernization Analysis</div>
+      <div class="footer-meta">Directional Financial Model / Ford Motor Company / ITSM + HR Service Transformation</div>
+      <div class="footer-meta">This analysis is for strategic discussion purposes only</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Animate bars on load
+  document.addEventListener('DOMContentLoaded', () => {
+    const bars = document.querySelectorAll('.ticket-bar-fill, .wf-fill');
+    bars.forEach(bar => {
+      const target = bar.style.width;
+      bar.style.width = '0';
+      setTimeout(() => { bar.style.width = target; }, 300);
+    });
+
+    // Intersection observer for fade-in sections
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.kpi-card, .bucket-card, .insight-card, .roi-summary-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(12px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(el);
+    });
+  });
+</script>
+</body>
+</html>
